@@ -1,0 +1,43 @@
+{
+  "name": "opencode-tps-counter",
+  "version": "0.1.0",
+  "description": "Live tokens-per-second meter for the OpenCode TUI, shown to the right of the session composer.",
+  "type": "module",
+  "exports": {
+    "./tui": "./tps-counter.tsx"
+  },
+  "files": [
+    "tps-counter.tsx",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "opencode": ">=1.17.0"
+  },
+  "peerDependencies": {
+    "@opencode-ai/plugin": "*",
+    "@opencode-ai/sdk": "*",
+    "@opentui/core": "*",
+    "@opentui/solid": "*",
+    "solid-js": "*"
+  },
+  "keywords": [
+    "opencode",
+    "plugin",
+    "tps",
+    "tokens-per-second",
+    "meter",
+    "tui",
+    "solid-js"
+  ],
+  "author": "Luiz Nickel",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vaporwavie/opencode-tps-counter.git"
+  },
+  "bugs": {
+    "url": "https://github.com/vaporwavie/opencode-tps-counter/issues"
+  },
+  "homepage": "https://github.com/vaporwavie/opencode-tps-counter#readme"
+}
