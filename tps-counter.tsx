@@ -7,6 +7,8 @@ const WINDOW_MS = 5000
 const STALE_MS = 1500
 const MIN_SPAN_MS = 250
 
+const enc = new TextEncoder()
+
 const tui: TuiPlugin = async (api) => {
   const samples = new Map<string, { tokens: number; t: number }[]>()
   const lastKnown = new Map<string, number>()
@@ -14,7 +16,7 @@ const tui: TuiPlugin = async (api) => {
   const [version, setVersion] = createSignal(0)
   const [tick, setTick] = createSignal(0)
 
-  const estimate = (text: string) => Math.max(1, Math.ceil(new TextEncoder().encode(text).length / 5)) // ~5 bytes/token
+  const estimate = (text: string) => Math.max(1, Math.ceil(enc.encode(text).length / 5)) // ~5 bytes/token
 
   const liveTps = (sessionID: string): number | null => {
     if (api.state.session.status(sessionID)?.type === "idle") return null
@@ -101,6 +103,4 @@ const tui: TuiPlugin = async (api) => {
   })
 }
 
-const mod: TuiPluginModule = { id: "tps-counter", tui }
-export { tui }
-export default mod
+export default { id: "tps-counter", tui } satisfies TuiPluginModule
