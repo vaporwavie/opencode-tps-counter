@@ -30,7 +30,7 @@ const tui: TuiPlugin = async (api) => {
     return (tokens / spanMs) * 1000
   }
 
-  type TpsState = { kind: "live"; v: number } | { kind: "between" } | { kind: "idle"; v: number } | null
+  type TpsState = { kind: "live"; v: number } | { kind: "paused"; v: number } | null
 
   const state = (sessionID: string): TpsState => {
     const live = liveTps(sessionID)
@@ -38,11 +38,8 @@ const tui: TuiPlugin = async (api) => {
       lastKnown.set(sessionID, live)
       return { kind: "live", v: live }
     }
-    if (api.state.session.status(sessionID)?.type === "idle") {
-      const last = lastKnown.get(sessionID)
-      return last !== undefined ? { kind: "idle", v: last } : null
-    }
-    return { kind: "between" }
+    const last = lastKnown.get(sessionID)
+    return last !== undefined ? { kind: "paused", v: last } : null
   }
 
   const offs: Array<() => void> = []
@@ -82,8 +79,7 @@ const tui: TuiPlugin = async (api) => {
   })
 
   const fmt = (v: number) => (v < 100 ? v.toFixed(1) : Math.round(v).toString())
-  const label = (s: Exclude<TpsState, null>) =>
-    s.kind === "live" ? `${fmt(s.v)} tok/s` : s.kind === "idle" ? `Last: ${fmt(s.v)} tok/s` : "…"
+  const label = (s: Exclude<TpsState, null>) => `${fmt(s.v)} tok/s`
 
   api.slots.register({
     slots: {
@@ -95,7 +91,7 @@ const tui: TuiPlugin = async (api) => {
         })
         return (
           <Show when={s()} fallback={null}>
-            <text fg={ctx.theme.current.textMuted}>{label(s()!)}</text>
+            <text fg={s()!.kind === "live" ? ctx.theme.current.text : ctx.theme.current.textMuted}>{label(s()!)}</text>
           </Show>
         )
       },
